@@ -4,7 +4,8 @@
 #include <ctime>
 #include <thread>
 
-#include "Util/Common.h"
+#include "Util/Random.h"
+#include "Util/Config.h"
 #include "Native/Native.h"
 
 #include "ResourceManager/ResourceHolder.h"
