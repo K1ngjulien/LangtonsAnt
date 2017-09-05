@@ -10,15 +10,24 @@
 #include "ResourceManager/ResourceHolder.h"
 
 Application::Application(const Config& config)
-:   m_ant       (config.width / 2, config.height / 2)
-,   m_cells     (config.width * config.height)
+:   m_cells     (config.width * config.height)
 ,   m_window    ({config.width, config.height}, "Empire")
 ,   m_pConfig   (&config)
 {
+    for (int i = 0; i < 55; i++)
+    {
+        int x = Random::get().intInRange(0, config.width - 1);
+        int y = Random::get().intInRange(0, config.height - 1);
+        m_ants.emplace_back(x, y);
+    }
+NUL
+
+    //m_window.setFramerateLimit(1);
     std::fill(m_cells.begin(), m_cells.end(), Cell::Off);
 
     m_view.setCenter({(float)config.width / 2, (float)config.height / 2});
     m_view.setSize  ({(float)config.width,     (float)config.height});
+    //m_view.setSize  (205, 115);
 
     m_pixelBuffer.create(m_pConfig->width, m_pConfig->height, sf::Color::White);
     updateImage();
@@ -28,8 +37,10 @@ Application::Application(const Config& config)
     m_pixelSurface.setTexture(&m_pixelSurfaceTex);
 
     m_guiText.setFont(ResourceHolder::get().fonts.get("arial"));
-    m_guiText.setCharacterSize(15);
     m_guiText.move(10, 3);
+    m_guiText.setCharacterSize (18);
+    m_guiText.setOutlineColor  (sf::Color::Black);
+    m_guiText.setOutlineThickness(2);
 }
 
 void Application::run()
@@ -38,11 +49,14 @@ void Application::run()
     unsigned year = 0;
     while (m_window.isOpen())
     {
+        //std::cout << m_view.getSize().y << " " << m_view.getSize().x << "\n";
         m_guiText.setString("Generation: " + std::to_string(year++));
         m_fpsCounter.update();
 
         input   (deltaClock.restart().asSeconds());
-        update  ();
+
+        for (auto& ant : m_ants)
+            update (ant);
 
         m_pixelSurfaceTex.loadFromImage(m_pixelBuffer);
         render  ();
@@ -127,37 +141,42 @@ void Application::input(float dt)
     m_view.move(change * dt);
 }
 
-void Application::update()
+void Application::update(Ant& ant)
 {
-    m_ant.translate();
-    const auto& position    = m_ant.getPosition();
-    auto&       cell        = m_cells[position.y * m_pConfig->width + position.x];
+    ant.translate();
+    const auto& position    = ant.getPosition();
 
     //handle oob/ wrapping
     if (position.x == (int)m_pConfig->width)
-        m_ant.setX(0);
+        ant.setX(0);
     else if (position.x == -1)
-        m_ant.setX(m_pConfig->width - 1);
+        ant.setX(m_pConfig->width - 1);
 
     if (position.y == (int)m_pConfig->height)
-        m_ant.setY(0);
+        ant.setY(0);
     else if (position.y == -1)
-        m_ant.setY(m_pConfig->height - 1);
+        ant.setY(m_pConfig->height - 1);
 
+    auto& cell = m_cells[position.y * m_pConfig->width + position.x];
 
+    sf::Color colour;
     switch(cell)
     {
         case Cell::Off:
             cell = Cell::On;
-            m_ant.turn(Turn::Right);
+            ant.turn(Turn::Right);
+            colour = ant.getColour();
             break;
 
         case Cell::On:
             cell = Cell::Off;
-            m_ant.turn(Turn::Left);
+            ant.turn(Turn::Left);
+            colour = sf::Color::White;
             break;
-
     }
+    m_pixelBuffer.setPixel(ant.getPosition().x,
+                           ant.getPosition().y,
+                           colour);
 }
 
 void Application::render()

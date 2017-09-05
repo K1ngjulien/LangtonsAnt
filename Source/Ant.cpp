@@ -1,7 +1,23 @@
 #include "Ant.h"
 
+#include "Util/Random.h"
+
+namespace
+{
+    sf::Color getRandomColour()
+    {
+        uint8_t r = (uint8_t)Random::get().intInRange(0, 255);
+        uint8_t g = (uint8_t)Random::get().intInRange(0, 255);
+        uint8_t b = (uint8_t)Random::get().intInRange(0, 255);
+
+        return { r, g, b };
+    }
+}
+
 Ant::Ant(int xPosition, int yPosition)
 :   m_position  (xPosition, yPosition)
+,   m_direction (Direction(Random::get().intInRange(0, 3)))
+,   m_colour    (getRandomColour())
 { }
 
 void Ant::turn(Turn direction)
@@ -11,11 +27,11 @@ void Ant::turn(Turn direction)
     switch (direction)
     {
         case Turn::Left:
-            dir--;
+            dir++;
             break;
 
         case Turn::Right:
-            dir++;
+            dir--;
             break;
     }
 

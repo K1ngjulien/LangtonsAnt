@@ -28,10 +28,12 @@ class Application
 
         void pollEvents();
         void input  (float dt);
-        void update ();
+        void update (Ant& ant);
         void render ();
 
-        Ant m_ant;
+        void testOutOfBounds(sf::Vector2i& position);
+
+        std::vector<Ant> m_ants;
 
         std::vector<Cell> m_cells;
 

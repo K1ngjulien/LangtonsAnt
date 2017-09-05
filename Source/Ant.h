@@ -1,7 +1,8 @@
 #ifndef ANT_H_INCLUDED
 #define ANT_H_INCLUDED
 
-#include <SFML/System/Vector2.hpp>
+#include <SFML/Graphics.hpp>
+#include <iostream>
 
 //anti-clockwise order
 enum class Direction
@@ -29,9 +30,13 @@ class Ant
         void setX(int x) { m_position.x = x;    }
         void setY(int y) { m_position.y = y;    }
 
+        sf::Color getColour () const { return m_colour; }
+
     private:
-        Direction       m_direction = Direction::Up;
+
         sf::Vector2i    m_position;
+        Direction       m_direction;
+        sf::Color       m_colour;
 };
 
 #endif // ANT_H_INCLUDED
