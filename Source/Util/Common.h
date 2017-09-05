@@ -8,28 +8,28 @@
 
 unsigned getIndex(unsigned width, unsigned x, unsigned y);
 
-enum Direction
+enum class ItrDirection
 {
     Increase,
     Decrease
 };
 
 template<typename F>
-void iterateInDirection(Direction direction,
+void iterateInDirection(ItrDirection direction,
                         unsigned lower_bound,
                         unsigned upper_bound,
                         F action)
 {
     switch(direction)
     {
-        case Direction::Increase:
+        case ItrDirection::Increase:
             for (unsigned i = lower_bound; i < upper_bound; i++)
             {
                 action(i);
             }
             break;
 
-        case Direction::Decrease:
+        case ItrDirection::Decrease:
             for (unsigned i = upper_bound - 1; i > lower_bound; i--)
             {
                 action(i);
@@ -44,8 +44,8 @@ void iterateInDirection(Direction direction,
 template<typename F>
 void randomCellForEach(const Config& config, F f)
 {
-    auto xDir = (Direction)Random::get().intInRange(0, 1);
-    auto yDir = (Direction)Random::get().intInRange(0, 1);
+    auto xDir = (ItrDirection)Random::get().intInRange(0, 1);
+    auto yDir = (ItrDirection)Random::get().intInRange(0, 1);
 
     iterateInDirection(yDir, 0, config.height, [&](auto y)
     {
@@ -60,9 +60,9 @@ void randomCellForEach(const Config& config, F f)
 template<typename F>
 void cellForEach(const Config& config, F f)
 {
-    iterateInDirection(Direction::Increase, 0, config.height, [&](auto y)
+    iterateInDirection(ItrDirection::Increase, 0, config.height, [&](auto y)
     {
-        iterateInDirection(Direction::Increase, 0, config.width, [&](auto x)
+        iterateInDirection(ItrDirection::Increase, 0, config.width, [&](auto x)
         {
             f(x, y);
         });

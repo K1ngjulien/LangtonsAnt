@@ -125,6 +125,7 @@ void Application::input(float dt)
 
 void Application::update()
 {
+
 }
 
 void Application::render()
