@@ -10,13 +10,17 @@
 #include "ResourceManager/ResourceHolder.h"
 
 Application::Application(const Config& config)
-:   m_window    ({config.width, config.height}, "Empire")
+:   m_ant       (config.width / 2, config.height / 2)
+,   m_cells     (config.width * config.height)
+,   m_window    ({config.width, config.height}, "Empire")
 ,   m_pConfig   (&config)
 {
+    std::fill(m_cells.begin(), m_cells.end(), Cell::Off);
+
     m_view.setCenter({(float)config.width / 2, (float)config.height / 2});
     m_view.setSize  ({(float)config.width,     (float)config.height});
 
-    m_pixelBuffer.create(m_pConfig->width, m_pConfig->height);
+    m_pixelBuffer.create(m_pConfig->width, m_pConfig->height, sf::Color::White);
     updateImage();
 
     m_pixelSurfaceTex.loadFromImage(m_pixelBuffer);
@@ -125,7 +129,35 @@ void Application::input(float dt)
 
 void Application::update()
 {
+    m_ant.translate();
+    const auto& position    = m_ant.getPosition();
+    auto&       cell        = m_cells[position.y * m_pConfig->width + position.x];
 
+    //handle oob/ wrapping
+    if (position.x == (int)m_pConfig->width)
+        m_ant.setX(0);
+    else if (position.x == -1)
+        m_ant.setX(m_pConfig->width - 1);
+
+    if (position.y == (int)m_pConfig->height)
+        m_ant.setY(0);
+    else if (position.y == -1)
+        m_ant.setY(m_pConfig->height - 1);
+
+
+    switch(cell)
+    {
+        case Cell::Off:
+            cell = Cell::On;
+            m_ant.turn(Turn::Right);
+            break;
+
+        case Cell::On:
+            cell = Cell::Off;
+            m_ant.turn(Turn::Left);
+            break;
+
+    }
 }
 
 void Application::render()

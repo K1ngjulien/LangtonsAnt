@@ -20,13 +20,14 @@ enum class Turn
 class Ant
 {
     public:
-        Ant(int xPosition, int yPosition);
+        Ant             (int xPosition, int yPosition);
 
-        void turn(Turn direction);
-
-        void translate();
+        void turn       (Turn direction);
+        void translate  ();
 
         const sf::Vector2i& getPosition() const { return m_position; }
+        void setX(int x) { m_position.x = x;    }
+        void setY(int y) { m_position.y = y;    }
 
     private:
         Direction       m_direction = Direction::Up;

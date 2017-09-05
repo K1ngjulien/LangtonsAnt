@@ -5,11 +5,18 @@
 #include <vector>
 
 #include "Util/FPSCounter.h"
+#include "Ant.h"
 
 struct Config;
 
 class Application
 {
+    enum Cell
+    {
+        On,
+        Off
+    };
+
     public:
         Application(const Config& config);
 
@@ -23,6 +30,10 @@ class Application
         void input  (float dt);
         void update ();
         void render ();
+
+        Ant m_ant;
+
+        std::vector<Cell> m_cells;
 
         sf::RenderWindow m_window;
 
