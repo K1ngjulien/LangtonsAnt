@@ -18,13 +18,12 @@ class Application
     };
 
     public:
-        Application(const Config& config);
+        Application(int antCount, const Config& config);
 
         void run();
 
     private:
         void makeImage();
-        void updateImage();
 
         void pollEvents();
         void input  (float dt);

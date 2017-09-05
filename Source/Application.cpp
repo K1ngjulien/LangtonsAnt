@@ -9,28 +9,31 @@
 
 #include "ResourceManager/ResourceHolder.h"
 
-Application::Application(const Config& config)
+namespace
+{
+    sf::Color bgColour = {100, 100, 100};
+    sf::Color clrColur = {125, 125, 125};
+}
+
+Application::Application(int antCount, const Config& config)
 :   m_cells     (config.width * config.height)
 ,   m_window    ({config.width, config.height}, "Empire")
 ,   m_pConfig   (&config)
 {
-    for (int i = 0; i < 55; i++)
+    for (int i = 0; i < antCount; i++)
     {
         int x = Random::get().intInRange(0, config.width - 1);
         int y = Random::get().intInRange(0, config.height - 1);
         m_ants.emplace_back(x, y);
     }
-NUL
 
-    //m_window.setFramerateLimit(1);
     std::fill(m_cells.begin(), m_cells.end(), Cell::Off);
 
     m_view.setCenter({(float)config.width / 2, (float)config.height / 2});
     m_view.setSize  ({(float)config.width,     (float)config.height});
-    //m_view.setSize  (205, 115);
 
-    m_pixelBuffer.create(m_pConfig->width, m_pConfig->height, sf::Color::White);
-    updateImage();
+    m_pixelBuffer.create(m_pConfig->width, m_pConfig->height, bgColour);
+
 
     m_pixelSurfaceTex.loadFromImage(m_pixelBuffer);
     m_pixelSurface.setSize({(float)config.width, (float)config.height});
@@ -49,11 +52,10 @@ void Application::run()
     unsigned year = 0;
     while (m_window.isOpen())
     {
-        //std::cout << m_view.getSize().y << " " << m_view.getSize().x << "\n";
         m_guiText.setString("Generation: " + std::to_string(year++));
         m_fpsCounter.update();
 
-        input   (deltaClock.restart().asSeconds());
+        input (deltaClock.restart().asSeconds());
 
         for (auto& ant : m_ants)
             update (ant);
@@ -107,14 +109,6 @@ void Application::makeImage()
     {
         std::cout << TextColour::Red << "Failed to save!\n\n" << TextColour::Default;
     }
-}
-
-void Application::updateImage()
-{
-    cellForEach(*m_pConfig, [&](unsigned x, unsigned y)
-    {
-        //m_pixelBuffer.setPixel(x, y, m_world.getColorAt(x, y));
-    });
 }
 
 void Application::input(float dt)
@@ -171,7 +165,7 @@ void Application::update(Ant& ant)
         case Cell::On:
             cell = Cell::Off;
             ant.turn(Turn::Left);
-            colour = sf::Color::White;
+            colour = bgColour;
             break;
     }
     m_pixelBuffer.setPixel(ant.getPosition().x,
@@ -181,7 +175,7 @@ void Application::update(Ant& ant)
 
 void Application::render()
 {
-    m_window.clear(sf::Color::Blue);
+    m_window.clear(clrColur);
 
     //Pixels
     m_window.setView(m_view);
