@@ -8,7 +8,7 @@ int main()
     config.height   = 720;
 
     std::string inputBuffer;
-    std::cout << "How many ants?";
+    std::cout << "How many ants? ";
     std::cin >> inputBuffer;
 
     for (auto c : inputBuffer)
