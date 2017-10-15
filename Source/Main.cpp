@@ -8,7 +8,7 @@ int main()
     config.height   = 720;
 
     std::string inputBuffer;
-    std::cout << "How many ants? ";
+    std::cout << "\nHow many ants? [Enter a positive numbers] ";
     std::cin >> inputBuffer;
 
     for (auto c : inputBuffer)
@@ -20,6 +20,13 @@ int main()
         }
     }
     int n = std::stoi(inputBuffer);
+    if (n == 0)
+    {
+        std::cout << "Invalid input, must be a number greater than 0\n";
+        main(); //hacky af but it works
+    }
+
+    std::cout << "Press Q to add more ants!\n";
 
     Application app(n, config);
     app.run();

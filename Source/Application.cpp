@@ -12,7 +12,7 @@
 
 namespace
 {
-    sf::Color bgColour = {100, 100, 100};
+    sf::Color bgColour = {200, 200, 200};
     sf::Color clrColur = {125, 125, 125};
 }
 
@@ -23,9 +23,7 @@ Application::Application(int antCount, const Config& config)
 {
     for (int i = 0; i < antCount; i++)
     {
-        int x = Random::get().intInRange(0, config.width - 1);
-        int y = Random::get().intInRange(0, config.height - 1);
-        m_ants.emplace_back(x, y);
+        addAnt();
     }
 
     std::fill(m_cells.begin(), m_cells.end(), Cell::Off);
@@ -67,6 +65,13 @@ void Application::run()
     }
 }
 
+void Application::addAnt()
+{
+    int x = Random::get().intInRange(0, m_pConfig->width - 1);
+    int y = Random::get().intInRange(0, m_pConfig->height - 1);
+    m_ants.emplace_back(x, y);
+}
+
 
 void Application::pollEvents()
 {
@@ -83,13 +88,17 @@ void Application::pollEvents()
             {
                 std::thread(&Application::makeImage, this).detach();
             }
-            if (e.key.code == sf::Keyboard::Up)
+            else if (e.key.code == sf::Keyboard::Up)
             {
                 m_view.zoom(0.99);
             }
-            if (e.key.code == sf::Keyboard::Down)
+            else if (e.key.code == sf::Keyboard::Down)
             {
                 m_view.zoom(1.01);
+            }
+            else if (e.key.code == sf::Keyboard::Q)
+            {
+                addAnt();
             }
         }
     }

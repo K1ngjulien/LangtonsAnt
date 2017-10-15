@@ -23,6 +23,8 @@ class Application
         void run();
 
     private:
+        void addAnt();
+
         void makeImage();
 
         void pollEvents();
