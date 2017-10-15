@@ -1,0 +1,5 @@
+WASD to pan around
+
+Up/Down arrow to zoom in/ out
+
+Q to add more ants

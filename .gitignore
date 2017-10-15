@@ -13,7 +13,7 @@ obj/
 #Makefile stuff
 Makefile
 *.o
-langstons_ant/
+LangstonsAnt/
 
 #.dll stuff
 *.dll
