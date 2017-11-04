@@ -18,7 +18,7 @@ namespace
 
 Application::Application(int antCount, const Config& config)
 :   m_cells     (config.width * config.height)
-,   m_window    ({config.width, config.height}, "Empire")
+,   m_window    ({config.width, config.height}, "Langton's Ant")
 ,   m_pConfig   (&config)
 {
     for (int i = 0; i < antCount; i++)
