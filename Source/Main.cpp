@@ -1,6 +1,11 @@
 #include "Application.h"
 #include "Util/Config.h"
 
+bool checkInput(std::string input)
+{
+    return std::stoi(input) <= 0;   //True if input is invalid
+}
+
 int main()
 {
     Config config;
@@ -8,26 +13,21 @@ int main()
     config.height   = 720;
 
     std::string inputBuffer;
-    std::cout << "\nHow many ants? [Enter a positive numbers] ";
-    std::cin >> inputBuffer;
 
-    for (auto c : inputBuffer)
+    do    //Input and checking validity
     {
-        if (!std::isdigit(c))
-        {
-            std::cout << "Invalid input, must be a number greater than 0\n";
-            main(); //hacky af but it works
-        }
+        std::cout << "\nHow many ants? [Enter a positive numbers] ";
+        std::cin >> inputBuffer;
+
+        if(checkInput(inputBuffer))
+            std::cout << "Input must be greater than 0!\n";
     }
-    int n = std::stoi(inputBuffer);
-    if (n == 0)
-    {
-        std::cout << "Invalid input, must be a number greater than 0\n";
-        main(); //hacky af but it works
-    }
+    while (checkInput(inputBuffer)); //Not as inefficient as filling the callstack with recursive calls
 
     std::cout << "Press Q to add more ants!\n";
 
-    Application app(n, config);
+    Application app(std::stoi(inputBuffer), config);
     app.run();
 }
+
+

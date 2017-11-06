@@ -3,6 +3,10 @@ CmakeFiles/
 CmakeCache.txt
 cmake_install.cmake
 
+#CLion files
+.idea/
+cmake-build-debug/
+
 #CodeBLocks stuff
 *.layout
 *.depend
